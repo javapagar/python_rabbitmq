@@ -1,6 +1,13 @@
-version: '3'
+version: '3.7'
 
 services:
+  fastapi:
+    build: './fast-api'
+    ports: 
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
@@ -10,6 +17,12 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+
+  celery_worker:
+    build: './celery_tasks'
+    depends_on:
+      - rabbitmq
+      - fastapi
 
 networks:
   default:
